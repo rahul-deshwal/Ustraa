@@ -4,7 +4,7 @@ import classes from './Home.css'
 
 const Home = (props) => {
     const [categoryList, setCategoryList] = useState([])
-    const [productList, setProductList] = useState({})
+    //const [productList, setProductList] = useState({})
     const [productListData, setProductListData] = useState({})
     const [viewButton, setViewButton] = useState(false)
     const [listData, setListData] = useState({
@@ -16,25 +16,35 @@ const Home = (props) => {
 
     useEffect(() => {
         props.getCategoryData()
+        window.addEventListener('mousedown', handleClickOutside)
+
+        return () => {
+            window.removeEventListener('mousedown', handleClickOutside)
+        }
     }, [])
 
+
     useEffect(() => {
-        console.log(props.categoryList)
-        if (props.categoryList.length){
+        if (props.categoryList.length) {
             setCategoryList(props.categoryList)
-            props.getProductList(props.categoryList[1]?.category_id)
+            props.getProductList(props.categoryList[0]?.category_id)
         }
-        if (props.productList)
-            setProductList(props.productList)
+        // if (props.productList)
+        //     setProductList(props.productList)
         if (props.heading) {
-            setListData({ heading: props.heading })
+            setListData(prevState => {
+                return {
+                    ...prevState,
+                    heading: props.heading
+                }
+            })
         }
     }, [props.heading])
 
 
 
     useEffect(() => {
-        if (productListData)
+        if (props.productListData)
             setProductListData(props.productListData)
     }, [props.productListData])
 
@@ -43,8 +53,19 @@ const Home = (props) => {
         setViewButton(false)
     }
 
+    const handleClickOutside = (event) => {
+        if (document.getElementById('outerListDiv') && !document.getElementById('outerListDiv').contains(event.target)) {
+            setListData(prevState => {
+                return {
+                    ...prevState,
+                    changeButton: !prevState.changeButton
+                }
+            })
+        }
+    }
 
-    console.log(productListData, 'ok')
+
+    console.log(productListData, 'ln 68')
 
     const showProductList = () => {
         let newProductList = []
@@ -59,13 +80,13 @@ const Home = (props) => {
                 <div className={classes.outerListDiv}>
                     <div className={classes.listImageDiv}>
                         <div>
-                            <a><img src={item.image_urls.x120} alt={item.name} /></a>
+                            <a href="http"><img src={item.image_urls.x120} alt={item.name} /></a>
                         </div>
 
                     </div>
                     <div className={classes.listNameDiv}>
                         <div>
-                            <a>
+                            <a href="http">
                                 <div>
                                     <p className={classes.list_name}>{item.name}</p>
                                 </div>
@@ -103,41 +124,50 @@ const Home = (props) => {
     }
 
     const categoryChangeHandler = (id) => {
+        categoryItemClicked(id)
         setListData(prevState => {
             return {
                 ...prevState,
-                changeButton: !prevState.changeButton,
-                changeButtonData: !prevState.changeButtonData
+                changeButton: false
             }
         })
-        categoryItemClicked(id)
     }
 
     const changeButtonHandler = () => {
-        const newCategory = (
-            <div className={classes.changeButtonData}>
-                <ul >
-                    {categoryList.length && categoryList.map(item => {
-                        return (
-                            <div>
-                                <li onClick={() => categoryChangeHandler(item.category_id)}>{item.category_name}</li>
-                            </div>
-                        )
-                    })}
-                </ul>
-            </div>
-        )
-        // return newCategory
-        setListData(prevState => {
-            return {
-                ...prevState,
-                changeButton: !prevState.changeButton,
-                changeButtonData: newCategory
-            }
-        })
+        console.log(listData.changeButton, 'changeButton')
+        if (listData.changeButton) {
+            setListData(prevState => {
+                return {
+                    ...prevState,
+                    changeButton: false
+                }
+            })
+            console.log('change button clicked if')
+        } else {
+            const newCategory = (
+                <div className={classes.changeButtonData} id='outerListDiv'>
+                    <ul >
+                        {categoryList.length && categoryList.map((item, index) => {
+                            return (
+                                <div>
+                                    <li key={item.category_id + index} onClick={() => categoryChangeHandler(item.category_id)}>{item.category_name}</li>
+                                </div>
+                            )
+                        })}
+                    </ul>
+                </div>
+            )
+            // return newCategory
+            setListData(prevState => {
+                return {
+                    ...prevState,
+                    changeButton: true,
+                    changeButtonData: newCategory
+                }
+            })
+            console.log('change button clicked else')
+        }
     }
-
-    console.log(listData, 'listData', viewButton)
 
     return (
         <div>
@@ -151,7 +181,7 @@ const Home = (props) => {
                             <ul>
                                 <li><button>View All</button></li>
                                 {categoryList.length ? categoryList.map(list => (
-                                    <li style={{backgroundImage: `url(${list.category_image})`,}} key={list.category_id} onClick={() => categoryItemClicked(list.category_id)}>
+                                    <li key={list.category_id} style={{ backgroundImage: `url(${list.category_image})` }} key={list.category_id} onClick={() => categoryItemClicked(list.category_id)}>
                                         {/* <img src={list.category_image} alt={} /> */}
                                         <span>{list.category_name}</span>
                                     </li>
@@ -169,7 +199,7 @@ const Home = (props) => {
                 {listData.changeButton && listData.changeButtonData}
                 <div>
                     <div className={classes.featureButton}>
-                        <button onClick={() => changeButtonHandler()}>change</button>{'  '}
+                        <button onClick={() => changeButtonHandler()}>change</button>
                         <button onClick={() => viewButtonClicked()}>{viewButton ? '[-] View Less' : '[+] View More'}</button>
                     </div>
                 </div>

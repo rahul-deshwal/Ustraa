@@ -1,6 +1,5 @@
 .bannerRoot {
-  max-width: 350px;
-  position: absolute;
+  /* max-width: 350px; */
   padding: 20px 15px;
 }
 
@@ -12,7 +11,7 @@
 }
 
 .categoryList ul {
-  overflow: scroll;
+  overflow-x: auto;
   white-space: nowrap;
   list-style-type: none;
   background-color: white;
@@ -31,7 +30,7 @@
 }
 
 .categoryList button {
-  padding: 15px 15px;
+  padding: 14px 14px;
   margin-right: 10px;
   font-size: 15px;
   color: rgb(112, 101, 101);
@@ -110,7 +109,7 @@
 
 .greyButton {
   color: white;
-  background-color: thistle;
+  background-color: rgb(149, 149, 149);
   padding: 8px 15px;
   order: none;
   border-style: none;
@@ -163,21 +162,20 @@
 
 .featureButton button:first-child {
   float: left;
-  margin-left: 20%;
+  margin-left: 15%;
 }
 
 .featureButton button:last-child {
   float: right;
-  margin-right: 20%;
+  margin-right: 8%;
 }
 
 .changeButtonData {
-  z-index: 10;
-  width: 250px;
-  height: 300px;
   position: absolute;
+  width: 60%;
+  height: 300px;
   left: 20px;
-  top: 70%;
+  transform: translateY(-90%);
   overflow: scroll;
 }
 
