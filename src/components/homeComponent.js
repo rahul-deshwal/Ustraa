@@ -79,18 +79,11 @@ const Home = (props) => {
             return (
                 <div className={classes.outerListDiv}>
                     <div className={classes.listImageDiv}>
-                        <div>
-                            <a href="http"><img src={item.image_urls.x120} alt={item.name} /></a>
-                        </div>
-
+                        <img src={item.image_urls.x120} alt={item.name} />
                     </div>
                     <div className={classes.listNameDiv}>
                         <div>
-                            <a href="http">
-                                <div>
-                                    <p className={classes.list_name}>{item.name}</p>
-                                </div>
-                            </a>
+                            <p className={classes.list_name}>{item.name}</p>
                             <div className={classes.listPriceDiv}>
                                 <p className={classes.list_weight}>{`(${item.weight} ${item.weight_unit})`}</p>
                                 <div >
@@ -98,19 +91,13 @@ const Home = (props) => {
                                     <p className={classes.price_list}>{item.price > item.final_price && `₹ ${item.price}`}</p>
                                 </div>
                             </div>
-                            <div>
-                                <div>
-                                    <button className={item.is_in_stock ? classes.greenButton : classes.greyButton}>
-                                        {item.is_in_stock ? 'ADD TO CART' : 'OUT OF STOCK'}
-                                    </button>
-                                </div>
-                            </div>
+                            <button className={item.is_in_stock ? classes.greenButton : classes.greyButton}>
+                                {item.is_in_stock ? 'ADD TO CART' : 'OUT OF STOCK'}
+                            </button>
                         </div>
                     </div>
                     <div className={classes.ratingDiv}>
-                        <div>
-                            <span>{`${item.rating ? item.rating : '0'} ⭐`}</span>
-                        </div>
+                        <span>{`${item.rating ? item.rating : '0'} ⭐`}</span>
                     </div>
                 </div>
             )
